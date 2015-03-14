@@ -67,10 +67,11 @@ def parse(tokens)
 end
 
 GLOBAL_ENVIRONMENT = {
-  :+ => lambda {|*args| args.inject(:+) },
-  :- => lambda {|*args| args.inject(:-) },
-  :* => lambda {|*args| args.inject(:*) },
-  :/ => lambda {|*args| args.inject(:/) }
+  :+       => lambda {|*args| args.inject(:+) },
+  :-       => lambda {|*args| args.inject(:-) },
+  :*       => lambda {|*args| args.inject(:*) },
+  :/       => lambda {|*args| args.inject(:/) },
+  :println => lambda {|*args| puts args.join(' ') }
 }
 
 PROMPT = 'sceems> '
