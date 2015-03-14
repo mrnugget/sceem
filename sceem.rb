@@ -54,8 +54,29 @@ def lambda_definition?(expression)
   expression.is_a?(Array) && expression.first == :lambda
 end
 
+def if_expression?(expression)
+  expression.is_a?(Array) && expression.first == :if
+end
+
 def make_lambda(expression, environment)
   Procedure.new(expression[1], expression[2], environment)
+end
+
+def evaluate_if(expression, environment)
+  predicate = expression[1]
+  consequence = expression[2]
+
+  if evaluate(predicate, environment)
+    evaluate(consequence, environment)
+  else
+    if alternative = expression[3]
+      evaluate(alternative, environment)
+    end
+  end
+end
+
+def quoted?(expression)
+  expression.is_a?(Array) && expression.first == :quote
 end
 
 def evaluate(expression, environment)
@@ -65,8 +86,12 @@ def evaluate(expression, environment)
     environment[expression]
   elsif definition?(expression)
     make_definition(expression, environment)
+  elsif quoted?(expression)
+    expression[1]
   elsif lambda_definition?(expression)
     make_lambda(expression, environment)
+  elsif if_expression?(expression)
+    evaluate_if(expression, environment)
   else
     operator = evaluate(expression.first, environment)
     operands = expression[1..-1].map {|arg| evaluate(arg, environment) }
@@ -119,7 +144,8 @@ GLOBAL_ENVIRONMENT = Environment.new({
   :-       => lambda {|*args| args.inject(:-) },
   :*       => lambda {|*args| args.inject(:*) },
   :/       => lambda {|*args| args.inject(:/) },
-  :println => lambda {|*args| puts args.join(' ') }
+  :println => lambda {|*args| puts args.join(' ') },
+  :eq?     => lambda {|one, two| one == two }
 })
 
 PROMPT = 'sceems> '
