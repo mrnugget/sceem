@@ -1,3 +1,32 @@
+class Procedure
+  attr_accessor :parameters, :body, :environment
+
+  def initialize(parameters, body, environment)
+    self.parameters = parameters
+    self.body = body
+    self.environment = environment
+  end
+
+  def apply(arguments)
+    env = Environment.new(self.environment)
+
+    self.parameters.each_with_index { |p, i| env[p] = arguments[i] }
+
+    evaluate(self.body, env)
+  end
+end
+
+class Environment < Hash
+  attr_accessor :enclosing_environment
+  def initialize(enclosing_environment)
+    self.enclosing_environment = enclosing_environment
+  end
+
+  def [](key)
+    self.fetch(key) { self.enclosing_environment[key] }
+  end
+end
+
 def tokenize(str)
   str.gsub(/\(/, ' ( ').gsub(/\)/, ' ) ').split
 end
@@ -23,26 +52,6 @@ end
 
 def lambda_definition?(expression)
   expression.is_a?(Array) && expression.first == :lambda
-end
-
-class Procedure
-  attr_accessor :parameters, :body, :environment
-
-  def initialize(parameters, body, environment)
-    self.parameters = parameters
-    self.body = body
-    self.environment = environment
-  end
-
-  def apply(arguments)
-    procedure_environment = self.environment.dup
-
-    self.parameters.each_with_index do |param, idx|
-      procedure_environment[param] = arguments[idx]
-    end
-
-    evaluate(self.body, procedure_environment)
-  end
 end
 
 def make_lambda(expression, environment)
@@ -105,13 +114,13 @@ def parse(tokens)
   end
 end
 
-GLOBAL_ENVIRONMENT = {
+GLOBAL_ENVIRONMENT = Environment.new({
   :+       => lambda {|*args| args.inject(:+) },
   :-       => lambda {|*args| args.inject(:-) },
   :*       => lambda {|*args| args.inject(:*) },
   :/       => lambda {|*args| args.inject(:/) },
   :println => lambda {|*args| puts args.join(' ') }
-}
+})
 
 PROMPT = 'sceems> '
 
