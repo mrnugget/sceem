@@ -21,6 +21,34 @@ def make_definition(expression, environment)
   nil
 end
 
+def lambda_definition?(expression)
+  expression.is_a?(Array) && expression.first == :lambda
+end
+
+class Procedure
+  attr_accessor :parameters, :body, :environment
+
+  def initialize(parameters, body, environment)
+    self.parameters = parameters
+    self.body = body
+    self.environment = environment
+  end
+
+  def apply(arguments)
+    procedure_environment = self.environment.dup
+
+    self.parameters.each_with_index do |param, idx|
+      procedure_environment[param] = arguments[idx]
+    end
+
+    evaluate(self.body, procedure_environment)
+  end
+end
+
+def make_lambda(expression, environment)
+  Procedure.new(expression[1], expression[2], environment)
+end
+
 def evaluate(expression, environment)
   if self_evaluating?(expression)
     expression
@@ -28,13 +56,23 @@ def evaluate(expression, environment)
     environment[expression]
   elsif definition?(expression)
     make_definition(expression, environment)
+  elsif lambda_definition?(expression)
+    make_lambda(expression, environment)
   else
-    procedure = environment[expression.first]
-    args = expression[1..-1].map {|arg| evaluate(arg, environment) }
-    if procedure.respond_to?(:call)
-      procedure.call(*args)
+    operator = evaluate(expression.first, environment)
+    operands = expression[1..-1].map {|arg| evaluate(arg, environment) }
+
+    if operator.is_a?(Procedure)
+      operator.apply(operands)
     else
-      puts "error: not a procedure"
+      procedure = environment[expression.first]
+      if procedure.respond_to?(:call)
+        procedure.call(*operands)
+      elsif procedure.is_a?(Procedure)
+        procedure.apply(operands)
+      else
+        puts "error: not a procedure"
+      end
     end
   end
 end
@@ -60,6 +98,7 @@ def parse(tokens)
     while tokens.first != ')'
       sub_list.push(parse(tokens))
     end
+    tokens.shift
     sub_list
   else
     convert_to_atom(token)
