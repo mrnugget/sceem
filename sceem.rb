@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 class Procedure
   attr_accessor :parameters, :body, :environment
 
@@ -7,12 +9,10 @@ class Procedure
     self.environment = environment
   end
 
-  def apply(arguments)
+  def call(*arguments)
     env = Environment.new(self.environment)
-
     self.parameters.each_with_index { |p, i| env[p] = arguments[i] }
-
-    evaluate(self.body, env)
+    self.body.map {|expression| evaluate(expression, env) }.last
   end
 end
 
@@ -59,7 +59,7 @@ def if_expression?(expression)
 end
 
 def make_lambda(expression, environment)
-  Procedure.new(expression[1], expression[2], environment)
+  Procedure.new(expression[1], expression[2..-1], environment)
 end
 
 def evaluate_if(expression, environment)
@@ -98,8 +98,6 @@ def evaluate(expression, environment)
 
     if operator.respond_to?(:call)
       operator.call(*operands)
-    elsif operator.is_a?(Procedure)
-      operator.apply(operands)
     else
       raise "error: '#{operator}' not a procedure"
     end
