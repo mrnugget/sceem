@@ -105,7 +105,7 @@ def evaluate(expression, environment)
       elsif procedure.is_a?(Procedure)
         procedure.apply(operands)
       else
-        puts "error: not a procedure"
+        raise "error: '#{procedure}' not a procedure"
       end
     end
   end
