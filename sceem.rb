@@ -96,17 +96,12 @@ def evaluate(expression, environment)
     operator = evaluate(expression.first, environment)
     operands = expression[1..-1].map {|arg| evaluate(arg, environment) }
 
-    if operator.is_a?(Procedure)
+    if operator.respond_to?(:call)
+      operator.call(*operands)
+    elsif operator.is_a?(Procedure)
       operator.apply(operands)
     else
-      procedure = environment[expression.first]
-      if procedure.respond_to?(:call)
-        procedure.call(*operands)
-      elsif procedure.is_a?(Procedure)
-        procedure.apply(operands)
-      else
-        raise "error: '#{procedure}' not a procedure"
-      end
+      raise "error: '#{operator}' not a procedure"
     end
   end
 end
