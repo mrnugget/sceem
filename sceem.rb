@@ -150,13 +150,15 @@ GLOBAL_ENVIRONMENT = Environment.new({
 
 PROMPT = 'sceems> '
 
-puts 'Welcome to sceems!'
-print PROMPT
-
-while line = STDIN.gets
-  tokens = tokenize(line)
-  parsed = parse(tokens)
-  result = evaluate(parsed, GLOBAL_ENVIRONMENT)
-  puts result.inspect if result
+if $0 == __FILE__
+  puts 'Welcome to sceems!'
   print PROMPT
+
+  while line = STDIN.gets
+    tokens = tokenize(line)
+    parsed = parse(tokens)
+    result = evaluate(parsed, GLOBAL_ENVIRONMENT)
+    puts result.inspect if result
+    print PROMPT
+  end
 end
