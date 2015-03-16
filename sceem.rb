@@ -75,6 +75,14 @@ def evaluate_if(expression, environment)
   end
 end
 
+def begin_expression?(expression)
+  expression.is_a?(Array) && expression.first == :begin
+end
+
+def evaluate_begin_expression(expression, environment)
+  expression[1..-1].map {|exp| evaluate(exp, environment) }.last
+end
+
 def quoted?(expression)
   expression.is_a?(Array) && expression.first == :quote
 end
@@ -92,6 +100,8 @@ def evaluate(expression, environment)
     make_lambda(expression, environment)
   elsif if_expression?(expression)
     evaluate_if(expression, environment)
+  elsif begin_expression?(expression)
+    evaluate_begin_expression(expression, environment)
   else
     operator = evaluate(expression.first, environment)
     operands = expression[1..-1].map {|arg| evaluate(arg, environment) }

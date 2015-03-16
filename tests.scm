@@ -33,3 +33,10 @@
 
 ;; nested function definition
 (define iter-times (lambda (times) (define iter (lambda (start end) (if (eq? start end) (println start) (iter (+ start 1) end)))) (iter 0 times)))
+
+;; begin
+(begin (+ 5 5) (+ 10 10))
+
+;; begin in procedure
+(define run-times (lambda (f times) (define iter (lambda (current end) (if (eq? current end) "done" (begin (f) (iter (+ current 1) end))))) (iter 0 times)))
+(run-times (lambda () (println "foobar")) 10)
