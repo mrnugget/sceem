@@ -83,10 +83,6 @@ def evaluate_begin_expression(expression, environment)
   expression[1..-1].map {|exp| evaluate(exp, environment) }.last
 end
 
-def quoted?(expression)
-  expression.is_a?(Array) && expression.first == :quote
-end
-
 def evaluate(expression, environment)
   if self_evaluating?(expression)
     expression
@@ -94,8 +90,6 @@ def evaluate(expression, environment)
     environment[expression]
   elsif definition?(expression)
     make_definition(expression, environment)
-  elsif quoted?(expression)
-    expression[1]
   elsif lambda_definition?(expression)
     make_lambda(expression, environment)
   elsif if_expression?(expression)
