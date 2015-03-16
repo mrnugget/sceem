@@ -143,15 +143,25 @@ GLOBAL_ENVIRONMENT = Environment.new({
 
 PROMPT = 'sceems> '
 
+def eval_print_line(line)
+  return if line.strip.empty? || line.match(/\A;;/)
+
+  tokens = tokenize(line)
+  parsed = parse(tokens)
+  result = evaluate(parsed, GLOBAL_ENVIRONMENT)
+  puts result.inspect if result
+end
+
 if $0 == __FILE__
+  if !ARGV.empty? && File.exists?(ARGV.first)
+    File.read(ARGV.first).lines.each { |line| eval_print_line(line) }
+  end
+
   puts 'Welcome to sceems!'
   print PROMPT
 
   while line = STDIN.gets
-    tokens = tokenize(line)
-    parsed = parse(tokens)
-    result = evaluate(parsed, GLOBAL_ENVIRONMENT)
-    puts result.inspect if result
+    eval_print_line(line)
     print PROMPT
   end
 end
