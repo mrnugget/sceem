@@ -132,6 +132,16 @@ def parse(tokens)
   end
 end
 
+def eval_print_line(line)
+  return if line.strip.empty? || line.match(/\A;;/)
+
+  tokens = tokenize(line)
+  parsed = parse(tokens)
+  result = evaluate(parsed, GLOBAL_ENVIRONMENT)
+  puts result.inspect if result
+end
+
+
 GLOBAL_ENVIRONMENT = Environment.new({
   :+       => lambda {|*args| args.inject(:+) },
   :-       => lambda {|*args| args.inject(:-) },
@@ -142,15 +152,6 @@ GLOBAL_ENVIRONMENT = Environment.new({
 })
 
 PROMPT = 'sceems> '
-
-def eval_print_line(line)
-  return if line.strip.empty? || line.match(/\A;;/)
-
-  tokens = tokenize(line)
-  parsed = parse(tokens)
-  result = evaluate(parsed, GLOBAL_ENVIRONMENT)
-  puts result.inspect if result
-end
 
 if $0 == __FILE__
   if !ARGV.empty? && File.exists?(ARGV.first)
