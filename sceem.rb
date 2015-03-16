@@ -136,13 +136,21 @@ def parse(tokens)
   end
 end
 
+def format_result(result)
+  if result.is_a?(Array)
+    "(" + result.map {|r| format_result(r) }.join(' ') + ")"
+  else
+    result.inspect
+  end
+end
+
 def eval_print_line(line)
   return if line.strip.empty? || line.match(/\A;;/)
 
   tokens = tokenize(line)
   parsed = parse(tokens)
   result = evaluate(parsed, GLOBAL_ENVIRONMENT)
-  puts result.inspect if result
+  puts format_result(result) if result
 end
 
 
@@ -152,8 +160,13 @@ GLOBAL_ENVIRONMENT = Environment.new({
   :*       => lambda {|*args| args.inject(:*) },
   :/       => lambda {|*args| args.inject(:/) },
   :println => lambda {|*args| puts args.join(' ') },
-  :eq?     => lambda {|one, two| one == two }
+  :eq?     => lambda {|a, b| a == b },
+  :cons    => lambda {|a, b| [a, b] },
+  :car     => lambda {|pair| pair[0] },
+  :cdr     => lambda {|pair| pair[1].nil? ? nil : pair[1..-1].flatten },
+  :nil?    => lambda {|arg| arg.nil? }
 })
+
 
 PROMPT = 'sceems> '
 

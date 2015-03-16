@@ -40,3 +40,10 @@
 ;; begin in procedure
 (define run-times (lambda (f times) (define iter (lambda (current end) (if (eq? current end) "done" (begin (f) (iter (+ current 1) end))))) (iter 0 times)))
 (run-times (lambda () (println "foobar")) 10)
+
+;; cons/car/cdr
+(define test-list (cons 1 (cons 2 (cons 3 (cons 4 (cons 5 nil))))))
+(car test-list)
+(car (cdr (cdr (cdr test-list))))
+(define map (lambda (f l) (if (nil? l) nil (cons (f (car l)) (map f (cdr l))))))
+(map (lambda (x) (+ x 1)) test-list)
