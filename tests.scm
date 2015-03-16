@@ -23,5 +23,13 @@
 (define run-twice (lambda (f) (lambda (x) (f (f x)))))
 ((run-twice square) 5)
 
+;; recursive calls
 (define fact (lambda (n) (if (eq? n 1) 1 (* n (fact (- n 1))))))
 (fact 100)
+
+;; if expression
+(define test-eq (lambda (a b) (if (eq? a b) (println "true") (println "false"))))
+(define iter (lambda (start end) (if (eq? start end) (println "lol") (iter (+ start 1) end))))
+
+;; nested function definition
+(define iter-times (lambda (times) (define iter (lambda (start end) (if (eq? start end) (println start) (iter (+ start 1) end)))) (iter 0 times)))
