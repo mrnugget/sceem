@@ -1,6 +1,6 @@
 (+ 5 5)
 (- 10 5)
-(* 5 5 5 5)
+(* 5 5 (+ 5 (/ 20 2)))
 (/ 10 2)
 
 (println "testing")
@@ -22,3 +22,6 @@
 
 (define run-twice (lambda (f) (lambda (x) (f (f x)))))
 ((run-twice square) 5)
+
+(define fact (lambda (n) (if (eq? n 1) 1 (* n (fact (- n 1))))))
+(fact 100)
