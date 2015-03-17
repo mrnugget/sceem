@@ -45,8 +45,12 @@ end
 
 def make_definition(expression, environment)
   definition_variable = expression[1]
-  definition_value = expression[2]
-  environment[definition_variable] = evaluate(definition_value, environment)
+  if definition_variable.is_a?(Array)
+    lambda_expression = [:lambda, definition_variable[1..-1], expression[2]]
+    environment[definition_variable[0]] = evaluate(lambda_expression, environment)
+  else
+    environment[definition_variable] = evaluate(expression[2], environment)
+  end
   nil
 end
 

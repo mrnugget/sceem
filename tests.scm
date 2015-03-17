@@ -42,6 +42,7 @@
 (run-times (lambda () (println "foobar")) 10)
 
 ;; cons/car/cdr
+
 (define test-list (cons 1 (cons 2 (cons 3 (cons 4 (cons 5 nil))))))
 (car test-list)
 (car (cdr (cdr (cdr test-list))))
@@ -57,3 +58,9 @@
 ;; fibonaccci
 (define fib (lambda (n) (if (< n 2) 1 (+ (fib (- n 1)) (fib (- n 2))))))
 (fib 10)
+
+;; procedure definition syntax
+(define (square x) (* x x))
+(square 5)
+(define (map f l) (if (nil? l) nil (cons (f (car l)) (map f (cdr l)))))
+(map square test-list)
