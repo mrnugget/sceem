@@ -45,5 +45,15 @@
 (define test-list (cons 1 (cons 2 (cons 3 (cons 4 (cons 5 nil))))))
 (car test-list)
 (car (cdr (cdr (cdr test-list))))
+
+;; map
 (define map (lambda (f l) (if (nil? l) nil (cons (f (car l)) (map f (cdr l))))))
 (map (lambda (x) (+ x 1)) test-list)
+(map square test-list)
+(define print-elements (lambda (l) (map println l)))
+(print-elements test-list)
+(print-elements (map square test-list))
+
+;; fibonaccci
+(define fib (lambda (n) (if (< n 2) 1 (+ (fib (- n 1)) (fib (- n 2))))))
+(fib 10)

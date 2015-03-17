@@ -159,6 +159,8 @@ GLOBAL_ENVIRONMENT = Environment.new({
   :-       => lambda {|*args| args.inject(:-) },
   :*       => lambda {|*args| args.inject(:*) },
   :/       => lambda {|*args| args.inject(:/) },
+  :<       => lambda {|a, b| a < b },
+  :>       => lambda {|a, b| a > b },
   :println => lambda {|*args| puts args.join(' ') },
   :eq?     => lambda {|a, b| a == b },
   :cons    => lambda {|a, b| [a, b] },
