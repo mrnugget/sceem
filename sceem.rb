@@ -168,14 +168,14 @@ GLOBAL_ENVIRONMENT = Environment.new({
 })
 
 
-PROMPT = 'sceems> '
+PROMPT = 'sceem> '
 
 if $0 == __FILE__
   if !ARGV.empty? && File.exists?(ARGV.first)
     File.read(ARGV.first).lines.each { |line| eval_print_line(line) }
   end
 
-  puts 'Welcome to sceems!'
+  puts 'Welcome to sceem!'
   print PROMPT
 
   while line = STDIN.gets
