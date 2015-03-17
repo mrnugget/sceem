@@ -103,7 +103,7 @@ def evaluate(expression, environment)
     if operator.respond_to?(:call)
       operator.call(*operands)
     else
-      raise "error: '#{operator}' not a procedure"
+      raise "error: '#{expression.first}' not a procedure"
     end
   end
 end
