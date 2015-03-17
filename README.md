@@ -11,9 +11,28 @@ sceem is heavily inspired by the [Metacircular Evaluator in
 SICP](https://mitpress.mit.edu/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1) and Peter
 Norvig's [lispy](http://norvig.com/lispy.html).
 
-sceem is already quite powerful. At the moment sceem has a few **primitive
-procedures** and support **definitions**, **if expressions**, **quotating** and
-**lambdas**.
+## Features
+
+sceem is already quite powerful.
+
+* a few primitive procedures
+* definitions
+* if
+* begin
+* cons/car/cdr
+* lambdas (first class lambdas - assign them, pass them, return them, use them
+  anonymously)
+
+To see what's there and already works, open **tests.scm**.
+
+## What's still missing
+
+* derived expressions (let, cond)
+* `list`
+* quoting
+* boolean literals
+* a lot of procedures
+* multi-line expression support
 
 ## Tests
 
