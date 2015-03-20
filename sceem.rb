@@ -179,13 +179,13 @@ PROMPT = 'sceem> '
 if $0 == __FILE__
   if !ARGV.empty? && File.exists?(ARGV.first)
     File.read(ARGV.first).lines.each { |line| eval_print_line(line) }
-  end
-
-  puts 'Welcome to sceem!'
-  print PROMPT
-
-  while line = STDIN.gets
-    eval_print_line(line)
+  else
+    puts 'Welcome to sceem!'
     print PROMPT
+
+    while line = STDIN.gets
+      eval_print_line(line)
+      print PROMPT
+    end
   end
 end
